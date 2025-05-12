@@ -3,28 +3,24 @@ import NavBar from "@/components/navbar";
 export default function About() {
     const items = [
         {
-            img: "/images/planet1.jpg",
-            desc: "Planet 1: A beautiful world."
+            name: "Nguyễn Công Hiếu",
+            desc: "Thành viên nhóm"
         },
         {
-            img: "/images/planet2.jpg",
-            desc: "Planet 2: Mysterious and vast."
+            name: "Nguyễn Huy Hưng",
+            desc: "Thành viên nhóm"
         },
         {
-            img: "/images/planet3.jpg",
-            desc: "Planet 3: Full of wonders."
+            name: "Nguyễn Xuân Huy",
+            desc: "Thành viên nhóm"
         },
         {
-            img: "/images/planet4.jpg",
-            desc: "Planet 4: Distant and cold."
+            name: "Đặng Quang Đức",
+            desc: "Thành viên nhóm"
         },
         {
-            img: "/images/planet5.jpg",
-            desc: "Planet 5: Bright and lively."
-        },
-        {
-            img: "/images/planet6.jpg",
-            desc: "Planet 6: The unknown frontier."
+            name: "Lê Quang Hổ",
+            desc: "Thành viên nhóm"
         }
     ];
     return (
@@ -47,21 +43,22 @@ export default function About() {
                 ))}
             </div>
 
-            <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start w-full">
-                <h1 className="text-4xl font-bold">About Us</h1>
-                <p className="text-lg text-center sm:text-left">
-                    Welcome to the Cosmos website! Here, you can explore the wonders of the universe.
+            <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-center w-full">
+              <h1 className="text-4xl font-bold text-center w-full">About Us</h1>
+                <p className="text-lg text-center w-full">
+                  Welcome to the Cosmos website! Here, you can explore the wonders of the universe.
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-5xl mt-8">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-9 w-full max-w-5xl mt-8 justify-items-center mx-auto justify-center">
                     {items.map((item, idx) => (
                         <div
                             key={idx}
-                            className="bg-white/10 rounded-2xl shadow-lg flex flex-col items-center p-6 backdrop-blur-md"
+                            className="w-64 h-60 bg-white/10 rounded-2xl shadow-lg flex flex-col items-center p-6 backdrop-blur-md"
                         >
-                            <img
-                                src={item.img}
-                                alt={`Planet ${idx + 1}`}
-                                className="w-32 h-32 object-cover rounded-xl mb-4"
+                            <p className="text-white text-lg font-semibold mb-2">{item.name}</p>
+                            <p
+                                key={item.name}
+                                className="w-32 h-32 object-cover rounded-xl mb-2"
                             />
                             <p className="text-white text-center">{item.desc}</p>
                         </div>
