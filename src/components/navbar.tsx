@@ -23,7 +23,7 @@ export default function NavBar() {
           <div className="hidden md:flex items-center space-x-8 ml-12">
             <Link href="/" className="text-gray-300 hover:text-white">Home</Link>
             <Link href="/about" className="text-gray-300 hover:text-white">About</Link>
-            <a href="#" className="text-gray-300 hover:text-white">Wiki Objects</a>
+            <a href="/wikiObject" className="text-gray-300 hover:text-white">Wiki Objects</a>
             <a href="#" className="text-gray-300 hover:text-white">Resources</a>
           </div>
 
