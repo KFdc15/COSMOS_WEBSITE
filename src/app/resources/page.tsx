@@ -80,7 +80,7 @@ export function Resources() {
                             <img
                                 src={item.image}
                                 alt={item.title}
-                                className="w-32 h-32 object-cover rounded-xl mb-4 border border-white/20 shadow"
+                                className="w-45 h-34 object-cover rounded-xl mb-4 border border-white/20 shadow"
                             />
                             <p className="text-white text-lg font-semibold mb-2 text-center">{item.title}</p>
                             <p className="text-white text-center text-sm">{item.description}</p>
