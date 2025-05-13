@@ -24,7 +24,7 @@ export default function NavBar() {
             <Link href="/" className="text-gray-300 hover:text-white">Home</Link>
             <Link href="/about" className="text-gray-300 hover:text-white">About</Link>
             <Link href="/wikiObjects" className="text-gray-300 hover:text-white">Wiki Objects</Link>
-            <a href="#" className="text-gray-300 hover:text-white">Resources</a>
+            <a href="/resources" className="text-gray-300 hover:text-white">Resources</a>
           </div>
 
           {/* Learn More Button */}
