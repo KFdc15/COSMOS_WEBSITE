@@ -5,7 +5,7 @@ import NavBar from "@/components/navbar";
 
 export default function WikiProject() {
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedItem, setSelectedItem] = useState(null);
+    const [selectedItem, setSelectedItem] = useState<WikiItem | null>(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     interface Star {
@@ -123,7 +123,17 @@ export default function WikiProject() {
         return () => clearInterval(interval);
     }, []);
 
-    const handleItemClick = (item) => {
+    interface WikiItem {
+        id: number;
+        title: string;
+        img: string;
+        desc: string;
+        category: string;
+        lastEdited: string;
+        content: string;
+    }
+
+    const handleItemClick = (item: WikiItem): void => {
         setSelectedItem(item);
         setIsPopupOpen(true);
     };
@@ -148,10 +158,7 @@ export default function WikiProject() {
         const apodData = await fetchNASAAPOD();
         if (apodData) {
             // Update the selected item with APOD data
-            setSelectedItem(prev => ({
-                ...prev,
-                apodData: apodData
-            }));
+            setSelectedItem(prev => prev ? { ...prev, apodData: apodData } : null);
         }
     };
 
@@ -219,7 +226,7 @@ export default function WikiProject() {
                         </button>
                     </div>
                     <div className="flex-1 flex flex-col items-center">
-                        <img id="apod-image" src="/api/placeholder/300/200" alt="NASA APOD" className="rounded-xl shadow-md max-h-64 object-cover" />
+                        <img id="apod-image" src="https://www.atscope.com.au/BRO/APOD_Logo.jpg" alt="NASA APOD" className="rounded-xl shadow-md max-h-64 object-cover" />
                         <h3 id="apod-title" className="mt-4 text-lg font-semibold"></h3>
                         <p id="apod-desc" className="text-sm text-white/80 mt-2 max-h-32 overflow-auto"></p>
                         <p id="apod-date" className="text-xs mt-1 text-white/50"></p>
@@ -295,25 +302,12 @@ export default function WikiProject() {
                     </div>
                 )}
 
-                {/* Recent Activity */}
-                <div className="w-full mt-8 p-6 bg-white/10 rounded-2xl backdrop-blur-md">
-                    <h2 className="text-2xl font-bold text-white mb-4">Recent Activity</h2>
-                    <div className="space-y-3">
-                        {wikiItems.slice(0, 3).map((item) => (
-                            <div key={item.id} className="flex items-center space-x-3 text-white/80">
-                                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                                <span className="text-sm">
-                                    <strong className="text-white">{item.title}</strong> was edited on {item.lastEdited}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+
             </main>
 
             {/* Footer */}
             <footer className="row-start-3 flex flex-col items-center gap-2 text-white/60">
-                <p>&copy; 2025 KnowledgeWiki. All rights reserved.</p>
+                <p>&copy; 2025 CosmosWiki </p>
                 <div className="flex space-x-4 text-sm">
                     <a href="#" className="hover:text-white transition-colors">Help</a>
                     <a href="#" className="hover:text-white transition-colors">Privacy</a>
