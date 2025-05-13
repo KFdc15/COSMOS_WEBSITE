@@ -5,6 +5,8 @@ import NavBar from "@/components/navbar";
 
 export default function WikiProject() {
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     interface Star {
         id: number;
@@ -26,7 +28,8 @@ export default function WikiProject() {
             img: "https://solarsystem.nasa.gov/internal_resources/125",
             desc: "The Milky Way is the galaxy that contains our solar system, with billions of stars, planets, and nebulae.",
             category: "Astronomy",
-            lastEdited: "2025-05-10"
+            lastEdited: "2025-05-10",
+            content: "The Milky Way is a barred spiral galaxy with a diameter between 170,000 and 200,000 light-years. It contains over 100 billion stars and is part of the Local Group of galaxies."
         },
         {
             id: 2,
@@ -34,7 +37,8 @@ export default function WikiProject() {
             img: "https://solarsystem.nasa.gov/internal_resources/3622",
             desc: "Regions of spacetime with gravitational forces so strong that nothing, not even light, can escape.",
             category: "Cosmology",
-            lastEdited: "2025-05-09"
+            lastEdited: "2025-05-09",
+            content: "Black holes are the densest objects in the universe, formed when massive stars collapse. They have an event horizon beyond which nothing can escape."
         },
         {
             id: 3,
@@ -42,7 +46,8 @@ export default function WikiProject() {
             img: "https://th.bing.com/th/id/OIP.VYZlPiWpSQ8QRV23QzLecQHaE6?rs=1&pid=ImgDetMain",
             desc: "The nearest major galaxy to the Milky Way, destined to collide with it in 4.5 billion years.",
             category: "Astronomy",
-            lastEdited: "2025-05-08"
+            lastEdited: "2025-05-08",
+            content: "Andromeda Galaxy (M31) is the closest major galaxy to Earth, located about 2.5 million light-years away. It's on a collision course with the Milky Way."
         },
         {
             id: 4,
@@ -50,7 +55,8 @@ export default function WikiProject() {
             img: "https://exoplanets.nasa.gov/system/resources/detail_files/2318_5K_Exo_Info_lores_FINAL.jpg",
             desc: "Planets that orbit stars outside our solar system — many may hold the potential for life.",
             category: "Space Science",
-            lastEdited: "2025-05-11"
+            lastEdited: "2025-05-11",
+            content: "Over 5,000 exoplanets have been discovered so far. Some are potentially habitable, located in the 'Goldilocks zone' of their star systems."
         },
         {
             id: 5,
@@ -58,7 +64,8 @@ export default function WikiProject() {
             img: "https://th.bing.com/th/id/OIP.CkHMnH09Pw9eypMNMjSNCAHaG5?rs=1&pid=ImgDetMain",
             desc: "Vast clouds of gas and dust in space, often the birthplaces of stars.",
             category: "Astronomy",
-            lastEdited: "2025-05-07"
+            lastEdited: "2025-05-07",
+            content: "Nebulae are clouds of gas and dust in space. Emission nebulae glow from ionized gas, while reflection nebulae reflect starlight."
         },
         {
             id: 6,
@@ -66,7 +73,8 @@ export default function WikiProject() {
             img: "https://science.nasa.gov/wp-content/uploads/2023/06/jwst-spacecraftpotentialtargetsmontageflip-1200px-4-jpg.webp",
             desc: "A revolutionary telescope launched to study the universe in infrared wavelengths.",
             category: "Technology",
-            lastEdited: "2025-05-12"
+            lastEdited: "2025-05-12",
+            content: "JWST is the most powerful space telescope ever built, capable of observing the first galaxies and studying exoplanet atmospheres."
         }
     ];
 
@@ -115,9 +123,43 @@ export default function WikiProject() {
         return () => clearInterval(interval);
     }, []);
 
+    const handleItemClick = (item) => {
+        setSelectedItem(item);
+        setIsPopupOpen(true);
+    };
+
+    const closePopup = () => {
+        setIsPopupOpen(false);
+        setSelectedItem(null);
+    };
+
+    const fetchNASAAPOD = async () => {
+        try {
+            const res = await fetch("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY");
+            const data = await res.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching NASA APOD:', error);
+            return null;
+        }
+    };
+
+    const handleLoadAPOD = async () => {
+        const apodData = await fetchNASAAPOD();
+        if (apodData) {
+            // Update the selected item with APOD data
+            setSelectedItem(prev => ({
+                ...prev,
+                apodData: apodData
+            }));
+        }
+    };
+
     return (
         <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-sans">
-            <NavBar />
+      
+    <NavBar />
+
 
             {/* Stars Background */}
             <div className="fixed inset-0 -z-10 bg-black">
@@ -218,6 +260,7 @@ export default function WikiProject() {
                         <div
                             key={item.id}
                             className="bg-white/15 rounded-2xl shadow-lg flex flex-col p-6 backdrop-blur-md hover:bg-white/20 transition-all duration-300 cursor-pointer group"
+                            onClick={() => handleItemClick(item)}
                         >
                             <div className="relative overflow-hidden rounded-xl mb-4">
                                 <img
@@ -277,6 +320,50 @@ export default function WikiProject() {
                     <a href="#" className="hover:text-white transition-colors">Terms</a>
                 </div>
             </footer>
+
+            {/* Popup Modal */}
+            {isPopupOpen && selectedItem && (
+                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white/15 rounded-2xl shadow-lg flex flex-col p-6 backdrop-blur-md hover:bg-white/20 transition-all duration-300 cursor-pointer group">
+                        <div className="flex justify-between items-start mb-6">
+                            <h2 className="text-3xl font-bold text-white">{selectedItem.title}</h2>
+                            <button
+                                onClick={closePopup}
+                                className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                            >
+                                ×
+                            </button>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <img
+                                    src={selectedItem.img}
+                                    alt={selectedItem.title}
+                                    className="w-full h-64 object-cover rounded-lg shadow-md"
+                                />
+                                <div className="mt-4 space-y-2">
+                                    <p className="text-sm text-white/70">
+                                        <strong>Category:</strong> {selectedItem.category}
+                                    </p>
+                                    <p className="text-sm text-white/70">
+                                        <strong>Last edited:</strong> {selectedItem.lastEdited}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <p className="text-white/80 mb-4">{selectedItem.desc}</p>
+                                <p className="text-white/80 mb-6">{selectedItem.content}</p>
+                                
+                             
+                            </div>
+                        </div>
+                        
+
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
