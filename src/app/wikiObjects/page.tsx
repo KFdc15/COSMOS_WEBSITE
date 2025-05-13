@@ -5,6 +5,7 @@ import NavBar from "@/components/navbar";
 
 export default function WikiProject() {
     const [searchTerm, setSearchTerm] = useState("");
+
     interface Star {
         id: number;
         name: string;
@@ -17,59 +18,59 @@ export default function WikiProject() {
     }
 
     const [stars, setStars] = useState<Star[]>([]);
-    
+
     const wikiItems = [
         {
             id: 1,
-            title: "Space Exploration",
-            img: "/api/placeholder/300/200",
-            desc: "Discover the history and future of human space exploration, from the first satellite to Mars missions.",
-            category: "Science",
+            title: "Milky Way Galaxy",
+            img: "https://solarsystem.nasa.gov/internal_resources/125",
+            desc: "The Milky Way is the galaxy that contains our solar system, with billions of stars, planets, and nebulae.",
+            category: "Astronomy",
             lastEdited: "2025-05-10"
         },
         {
             id: 2,
-            title: "Quantum Physics",
-            img: "/api/placeholder/300/200",
-            desc: "Understanding the fundamental principles that govern the behavior of matter and energy at the smallest scales.",
-            category: "Physics",
+            title: "Black Holes",
+            img: "https://solarsystem.nasa.gov/internal_resources/3622",
+            desc: "Regions of spacetime with gravitational forces so strong that nothing, not even light, can escape.",
+            category: "Cosmology",
             lastEdited: "2025-05-09"
         },
         {
             id: 3,
-            title: "Ancient Civilizations",
-            img: "/api/placeholder/300/200",
-            desc: "Explore the rise and fall of great civilizations throughout human history.",
-            category: "History",
+            title: "Andromeda Galaxy",
+            img: "https://th.bing.com/th/id/OIP.VYZlPiWpSQ8QRV23QzLecQHaE6?rs=1&pid=ImgDetMain",
+            desc: "The nearest major galaxy to the Milky Way, destined to collide with it in 4.5 billion years.",
+            category: "Astronomy",
             lastEdited: "2025-05-08"
         },
         {
             id: 4,
-            title: "Artificial Intelligence",
-            img: "/api/placeholder/300/200",
-            desc: "The development of intelligent machines and their impact on society.",
-            category: "Technology",
+            title: "Exoplanets",
+            img: "https://exoplanets.nasa.gov/system/resources/detail_files/2318_5K_Exo_Info_lores_FINAL.jpg",
+            desc: "Planets that orbit stars outside our solar system — many may hold the potential for life.",
+            category: "Space Science",
             lastEdited: "2025-05-11"
         },
         {
             id: 5,
-            title: "Marine Biology",
-            img: "/api/placeholder/300/200",
-            desc: "Life beneath the waves - from microscopic plankton to massive whales.",
-            category: "Biology",
+            title: "Nebulae",
+            img: "https://th.bing.com/th/id/OIP.CkHMnH09Pw9eypMNMjSNCAHaG5?rs=1&pid=ImgDetMain",
+            desc: "Vast clouds of gas and dust in space, often the birthplaces of stars.",
+            category: "Astronomy",
             lastEdited: "2025-05-07"
         },
         {
             id: 6,
-            title: "Climate Change",
-            img: "/api/placeholder/300/200",
-            desc: "Understanding the causes, effects, and solutions to global climate change.",
-            category: "Environment",
+            title: "James Webb Space Telescope",
+            img: "https://science.nasa.gov/wp-content/uploads/2023/06/jwst-spacecraftpotentialtargetsmontageflip-1200px-4-jpg.webp",
+            desc: "A revolutionary telescope launched to study the universe in infrared wavelengths.",
+            category: "Technology",
             lastEdited: "2025-05-12"
         }
     ];
 
-    const filteredItems = wikiItems.filter(item => 
+    const filteredItems = wikiItems.filter(item =>
         item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.category.toLowerCase().includes(searchTerm.toLowerCase())
@@ -77,13 +78,11 @@ export default function WikiProject() {
 
     const categories = [...new Set(wikiItems.map(item => item.category))];
 
-    // Fetch stars from API
+    // API stars
     useEffect(() => {
-        // Giả lập API call để lấy thông tin về các ngôi sao
         const fetchStars = async () => {
             try {
-                // Tạo dữ liệu ngôi sao giả lập (có thể thay thế bằng real API)
-                const mockApiStars = Array.from({length: 20}, (_, i) => ({
+                const mockApiStars = Array.from({ length: 20 }, (_, i) => ({
                     id: i,
                     name: `Star-${i + 1}`,
                     size: Math.random() * 3 + 2,
@@ -93,20 +92,18 @@ export default function WikiProject() {
                     color: ['white', 'yellow', 'cyan', 'gold'][Math.floor(Math.random() * 4)],
                     constellation: ['Orion', 'Ursa Major', 'Cassiopeia', 'Andromeda'][Math.floor(Math.random() * 4)]
                 }));
-                
+
                 setStars(mockApiStars);
             } catch (error) {
                 console.error('Lỗi khi fetch stars từ API:', error);
-                // Fallback với dữ liệu mặc định
                 setStars([]);
             }
         };
 
         fetchStars();
-        
-        // Update stars position mỗi 5 giây (tạo hiệu ứng chuyển động)
+
         const interval = setInterval(() => {
-            setStars(prevStars => 
+            setStars(prevStars =>
                 prevStars.map(star => ({
                     ...star,
                     x: (star.x + 0.1) % 100,
@@ -122,9 +119,8 @@ export default function WikiProject() {
         <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-sans">
             <NavBar />
 
-            {/* Background với stars như code gốc và thêm API stars */}
+            {/* Stars Background */}
             <div className="fixed inset-0 -z-10 bg-black">
-                {/* Các ngôi sao cố định như code gốc */}
                 {[...Array(80)].map((_, i) => (
                     <div
                         key={i}
@@ -138,35 +134,66 @@ export default function WikiProject() {
                         }}
                     />
                 ))}
-                
-                {/* API stars - Các ngôi sao lấy từ API */}
+
                 {stars.map((star, i) => (
                     <div
                         key={`api-star-${i}`}
                         className="absolute rounded-full bg-yellow-200 opacity-90"
                         style={{
-                            width: `${star.size || 3}px`,
-                            height: `${star.size || 3}px`,
-                            top: `${star.y || Math.random() * 100}%`,
-                            left: `${star.x || Math.random() * 100}%`,
-                            boxShadow: `0 0 ${star.brightness || 8}px 2px ${star.color || 'yellow'}`
+                            width: `${star.size}px`,
+                            height: `${star.size}px`,
+                            top: `${star.y}%`,
+                            left: `${star.x}%`,
+                            boxShadow: `0 0 ${star.brightness}px 2px ${star.color}`
                         }}
                     />
                 ))}
             </div>
 
-            <main className="flex flex-col gap-8 row-start-2 items-center w-full max-w-6xl">
-                {/* Search bar bên trong main */}
-                <div className="w-full flex justify-center">
-                    <input
-                        type="text"
-                        placeholder="Search articles..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="max-w-md px-4 py-2 rounded-lg bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    />
-                </div>
-                {/* Categories Filter */}
+            <main className="flex flex-col gap-10 row-start-2 items-center w-full max-w-6xl">
+                {/* NASA APOD Section */}
+                <section className="w-full bg-white/10 rounded-xl p-6 text-white backdrop-blur-md flex flex-col md:flex-row items-center gap-6 shadow-lg">
+                    <div className="flex-1">
+                        <h2 className="text-2xl font-bold mb-2">NASA Astronomy Picture of the Day</h2>
+                        <p className="mb-4">Each day, NASA shares a breathtaking image or video of our cosmos. Discover the wonders of space, stars, and galaxies beyond.</p>
+                        <button
+                            onClick={async () => {
+                                const res = await fetch("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY");
+                                const data = await res.json();
+                                const image = document.getElementById("apod-image") as HTMLImageElement;
+                                const title = document.getElementById("apod-title");
+                                const desc = document.getElementById("apod-desc");
+                                const date = document.getElementById("apod-date");
+                                if (image && title && desc && date) {
+                                    image.src = data.url;
+                                    title.textContent = data.title;
+                                    desc.textContent = data.explanation;
+                                    date.textContent = data.date;
+                                }
+                            }}
+                            className="px-5 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            Load Today's APOD
+                        </button>
+                    </div>
+                    <div className="flex-1 flex flex-col items-center">
+                        <img id="apod-image" src="/api/placeholder/300/200" alt="NASA APOD" className="rounded-xl shadow-md max-h-64 object-cover" />
+                        <h3 id="apod-title" className="mt-4 text-lg font-semibold"></h3>
+                        <p id="apod-desc" className="text-sm text-white/80 mt-2 max-h-32 overflow-auto"></p>
+                        <p id="apod-date" className="text-xs mt-1 text-white/50"></p>
+                    </div>
+                </section>
+
+                {/* Search */}
+                <input
+                    type="text"
+                    placeholder="Search articles..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="max-w-md px-4 py-2 rounded-lg bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+
+                {/* Categories */}
                 <div className="flex flex-wrap gap-3 justify-center">
                     {categories.map((category) => (
                         <button
@@ -178,14 +205,14 @@ export default function WikiProject() {
                     ))}
                 </div>
 
-                {/* Search Results Info */}
+                {/* Result Count */}
                 {searchTerm && (
                     <p className="text-white/80 text-lg">
                         Found {filteredItems.length} article{filteredItems.length !== 1 ? 's' : ''} for "{searchTerm}"
                     </p>
                 )}
 
-                {/* Wiki Articles Grid */}
+                {/* Articles Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
                     {filteredItems.map((item) => (
                         <div
@@ -202,10 +229,8 @@ export default function WikiProject() {
                                     {item.category}
                                 </div>
                             </div>
-                            
                             <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
                             <p className="text-white/80 text-sm mb-4 flex-grow">{item.desc}</p>
-                            
                             <div className="flex justify-between items-center text-white/60 text-xs">
                                 <span>Last edited: {item.lastEdited}</span>
                                 <div className="flex space-x-2">
@@ -217,7 +242,7 @@ export default function WikiProject() {
                     ))}
                 </div>
 
-                {/* No Results */}
+                {/* No Result */}
                 {filteredItems.length === 0 && searchTerm && (
                     <div className="text-center py-12">
                         <p className="text-white/80 text-lg mb-4">No articles found matching your search.</p>
@@ -227,7 +252,7 @@ export default function WikiProject() {
                     </div>
                 )}
 
-                {/* Recent Activity Section */}
+                {/* Recent Activity */}
                 <div className="w-full mt-8 p-6 bg-white/10 rounded-2xl backdrop-blur-md">
                     <h2 className="text-2xl font-bold text-white mb-4">Recent Activity</h2>
                     <div className="space-y-3">
