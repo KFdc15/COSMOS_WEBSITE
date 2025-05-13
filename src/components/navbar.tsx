@@ -24,17 +24,17 @@ export default function NavBar() {
             <Link href="/" className="text-gray-300 hover:text-white">Home</Link>
             <Link href="/about" className="text-gray-300 hover:text-white">About</Link>
             <Link href="/wikiObjects" className="text-gray-300 hover:text-white">Wiki Objects</Link>
-            <a href="/resources" className="text-gray-300 hover:text-white">Resources</a>
+            <Link href="/resources" className="text-gray-300 hover:text-white">Resources</Link>
           </div>
 
           {/* Learn More Button */}
           <div className="mr-8">
-            <a
-              href="#"
+            <Link
+              href="/auth/signup"
               className="bg-white text-[#04080F] px-6 py-2 rounded-full hover:bg-gray-200 transition-colors"
             >
               Explore Universe
-            </a>
+            </Link>
           </div>
         </div>
       </nav>
