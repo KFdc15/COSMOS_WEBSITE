@@ -46,7 +46,9 @@ export default function About() {
             </div>
 
             <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-center w-full">
-              <h1 className="text-4xl font-bold text-center w-full">About Us</h1>
+              <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                About Us
+                </h1>
                 <p className="text-lg text-center w-full">
                   Welcome to the Cosmos website! Here, you can explore the wonders of the universe.
                 </p>
