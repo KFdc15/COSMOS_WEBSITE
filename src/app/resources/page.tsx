@@ -1,52 +1,84 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useCallback } from 'react';
 import NavBar from '@/components/navbar';
+import { Play, X } from 'lucide-react';
 
 export function Resources() {
-    // Danh sách resource, bạn có thể thêm nhiều mục hơn
-    const resourcesData = [
+    const [selectedVideo, setSelectedVideo] = useState<{
+        title: string;
+        description: string;
+        youtubeId: string;
+    } | null>(null);
+
+    interface VideoItem {
+        title: string;
+        description: string;
+        link: string;
+        image: string;
+        youtubeId: string;
+    }
+
+    const handleCardClick = useCallback((item: VideoItem) => {
+        setSelectedVideo({
+            title: item.title,
+            description: item.description,
+            youtubeId: item.youtubeId
+        });
+    }, []);
+
+    const closeModal = () => setSelectedVideo(null);
+
+    const resourcesData: VideoItem[] = [
         {
-            title: 'Scale of the Universe',
-            description: 'Khám phá kích thước của vũ trụ từ nhỏ nhất đến lớn nhất với hình ảnh minh họa trực quan.',
+            title: 'Size scale of the Milky Way',
+            description: 'Watch video to explore more',
             link: 'https://scaleofuniverse.com/en/resources',
-            image: 'https://scaleofuniverse.com/en/img/scaleofuniverse.jpg',
+            image: 'https://th.bing.com/th?&id=OVP.44QqzkbgpalSuAQK3_vKmgHgFo&w=318&h=178&c=7&pid=2.1&rs=1',
+            youtubeId: '6Gcqq3XAlhY',
         },
         {
-            title: 'NASA Image and Video Library',
-            description: 'Kho hình ảnh và video về không gian, các hành tinh, tàu vũ trụ và nhiều hơn nữa.',
-            link: 'https://images.nasa.gov/',
-            image: 'https://www.nasa.gov/sites/default/files/thumbnails/image/nasa-logo-web-rgb.png',
+            title: 'What is Black hole?',
+            description: 'Watch video to explore more',
+            link: 'https://www.nasa.gov/universe/what-are-black-holes/',
+            image: 'https://th.bing.com/th?&id=OVF.OSd%2bWSmPvrhcD9bIt5z1LQ&w=318&h=178&c=7&pid=2.1&rs=1',
+            youtubeId: 'EJXTZ5jpSmk',
         },
         {
-            title: 'ESA Space for Kids',
-            description: 'Trang web của Cơ quan Vũ trụ Châu Âu dành cho trẻ em, với các bài viết, trò chơi và video về vũ trụ.',
+            title: 'The Big Bang Explained ',
+            description: 'Watch video to explore more',
             link: 'https://www.esa.int/kids/en/home',
-            image: 'https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2019/11/esa_kids_logo/20698238-1-eng-GB/ESA_Kids_logo_pillars.jpg',
+            image: 'https://th.bing.com/th?&id=OVF.SUX9b7VpCb3wD9q1v6sKpg&w=318&h=178&c=7&pid=2.1&rs=1',
+            youtubeId: 'T-m8ieA99CU',
         },
         {
-            title: 'Astronomy Picture of the Day',
-            description: 'Mỗi ngày một bức ảnh thiên văn tuyệt đẹp kèm giải thích từ các nhà thiên văn học.',
+            title: 'How small are we compared to the universe?',
+            description: 'Watch video to explore more',
             link: 'https://apod.nasa.gov/apod/astropix.html',
-            image: 'https://apod.nasa.gov/apod/calendar/S_210101.jpg',
+            image: 'https://th.bing.com/th/id/OVP.Xh25TS3DNJZ2g7CF1Zfa8QHgFo?w=272&h=153&c=7&rs=1&qlt=90&o=5&dpr=1.3&pid=1.7',
+            youtubeId: 'WYQ3O8U6SMY',
         },
         {
-            title: 'Solar System Exploration',
-            description: 'Khám phá hệ Mặt Trời với thông tin chi tiết về các hành tinh, vệ tinh và tàu thăm dò.',
+            title: 'A Journey to the End of the Universe',
+            description: 'Watch video to explore more',
             link: 'https://solarsystem.nasa.gov/',
-            image: 'https://solarsystem.nasa.gov/system/feature_items/images/82_carousel_ss_overview.jpg',
+            image: 'https://th.bing.com/th/id/OVP.wGiItUhu_Ky7ZZVBzBUW8wHgFo?w=272&h=153&c=7&rs=1&qlt=90&o=5&dpr=1.3&pid=1.7',
+            youtubeId: 'b_TkFhj9mgk',
         },
         {
-            title: 'HubbleSite',
-            description: 'Khám phá các hình ảnh và phát hiện từ kính viễn vọng Hubble.',
+            title: 'Hubble’s Highlights from its 35th Year in Orbit',
+            description: 'Watch video to explore more',
             link: 'https://hubblesite.org/',
-            image: 'https://hubblesite.org/files/live/sites/hubble/files/home/_images/hubble-logo.png',
+            image: 'https://th.bing.com/th/id/OVP.EWs1RTzllLLAkO1jq2WjYwHgFo?w=243&h=136&c=7&rs=1&qlt=90&o=5&dpr=1.3&pid=2.1',
+            youtubeId: '9VhWnJC9nkk',
         },
     ];
 
     return (
         <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
             <NavBar />
+
             <div className="fixed inset-0 -z-10 bg-black">
-                {/* Các ngôi sao */}
                 {[...Array(80)].map((_, i) => (
                     <div
                         key={i}
@@ -62,32 +94,104 @@ export function Resources() {
                 ))}
             </div>
 
-            <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-center w-full">
-                <h1 className="text-4xl font-bold text-center w-full">Resources</h1>
-                <p className="text-lg text-center w-full text-white/80">
-                    Tổng hợp các nguồn tài nguyên hữu ích giúp bạn khám phá vũ trụ và khoa học không gian.
-                </p>
+            <main className="flex flex-col gap-12 row-start-2 items-center w-full">
+                <div className="text-center space-y-4">
+                    <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                        Resources
+                    </h1>
+                    <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                        A collection of useful resources to help you explore the universe and space science.
+                    </p>
+                </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-9 w-full max-w-5xl mt-8 justify-items-center mx-auto justify-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 w-full max-w-7xl px-4">
                     {resourcesData.map((item, idx) => (
-                        <a
+                        <div
                             key={idx}
-                            href={item.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-64 h-80 bg-white/10 rounded-2xl shadow-lg flex flex-col items-center p-6 backdrop-blur-md transition-transform hover:scale-105 hover:bg-white/20"
+                            onClick={() => handleCardClick(item)}
+                            className="group relative w-full h-96 bg-gradient-to-br from-gray-900/50 to-gray-800/50 
+                                rounded-3xl overflow-hidden backdrop-blur-lg border border-gray-700/50 
+                                cursor-pointer transition-all duration-500 hover:scale-105 hover:shadow-2xl 
+                                hover:shadow-purple-500/25"
                         >
-                            <img
-                                src={item.image}
-                                alt={item.title}
-                                className="w-45 h-34 object-cover rounded-xl mb-4 border border-white/20 shadow"
-                            />
-                            <p className="text-white text-lg font-semibold mb-2 text-center">{item.title}</p>
-                            <p className="text-white text-center text-sm">{item.description}</p>
-                        </a>
+                            <div className="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-900 opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
+
+                            <div className="relative h-1/2 overflow-hidden">
+                                <img
+                                    src={item.image}
+                                    alt={item.title}
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60" />
+                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <div className="bg-white/20 backdrop-blur-md rounded-full p-6 border border-white/30">
+                                        <Play className="w-8 h-8 text-white fill-white" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="relative h-1/2 p-6 flex flex-col justify-between">
+                                <div>
+                                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-cyan-300 transition-colors">
+                                        {item.title}
+                                    </h3>
+                                    <p className="text-gray-300 text-sm leading-relaxed">
+                                        {item.description}
+                                    </p>
+                                </div>
+                                <div className="flex justify-between items-center mt-4">
+                                    <div className="flex items-center space-x-2 text-cyan-400 group-hover:text-cyan-300 transition-colors">
+                                        <Play className="w-4 h-4" />
+                                        <span className="text-sm font-medium">Watch video</span>
+                                    </div>
+                                    <div className="w-3 h-3 bg-cyan-400 rounded-full group-hover:bg-cyan-300 transition-colors animate-pulse" />
+                                </div>
+                            </div>
+                        </div>
                     ))}
                 </div>
             </main>
+
+                        {/* Footer */}
+            <footer className="row-start-3 flex flex-col items-center gap-2 text-white/60">
+                <p>&copy; 2025 Cosmos_Website </p>
+                <div className="flex space-x-4 text-sm">
+                    <a href="#" className="hover:text-white transition-colors">Help</a>
+                    <a href="#" className="hover:text-white transition-colors">Privacy</a>
+                    <a href="#" className="hover:text-white transition-colors">Terms</a>
+                </div>
+            </footer>
+
+            {selectedVideo && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="relative max-w-4xl w-full bg-gray-900 rounded-3xl overflow-hidden border border-gray-700">
+                        <button
+                            onClick={closeModal}
+                            className="absolute top-4 right-4 z-10 bg-gray-800/50 backdrop-blur-sm rounded-full p-2 
+                                text-white hover:bg-gray-700/50 transition-colors"
+                        >
+                            <X className="w-6 h-6" />
+                        </button>
+
+                        <div className="p-6 border-b border-gray-700">
+                            <h2 className="text-2xl font-bold text-white">{selectedVideo.title}</h2>
+                            <p className="text-gray-400 mt-2">{selectedVideo.description}</p>
+                        </div>
+
+                        <div className="aspect-video">
+                            <iframe
+                                width="100%"
+                                height="100%"
+                                src={`https://www.youtube.com/embed/${selectedVideo.youtubeId}?autoplay=1&rel=0`}
+                                title={selectedVideo.title}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            ></iframe>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
