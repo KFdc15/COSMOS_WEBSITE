@@ -1,6 +1,8 @@
 import Image from "next/image";
 import NavBar from "@/components/navbar";
 import Earth3D from "@/components/planet";
+import Mars3D from "@/components/planet2";
+import Jupiter3D from "@/components/planet3";
 
 export default function Home() {
   return (
@@ -39,6 +41,30 @@ export default function Home() {
           </p>
         </div>
       </main>
+      <main className="flex flex-row items-center w-full h-full gap-16 z-10 mt-150">
+      {/* Hành tinh quay tròn bên trái */}
+        <Mars3D />
+        {/* Desc bên phải */}
+        <div className="text-white text-xl max-w-xs text-left">
+          <p>
+            Hãy cùng Cosmos Website khám phá những điều kỳ diệu của không gian và thời gian, từ những hành tinh xa xôi đến các thiên hà bí ẩn!
+          </p>
+        </div>
+      </main>
+      <main className="flex flex-row items-center w-full h-full gap-10 z-10 mt-150">
+        <Jupiter3D />
+        <div className="text-white text-xl max-w-xs text-right">
+          <p>
+            Khám phá vũ trụ rộng lớn, nơi những hành tinh quay quanh các vì sao và mở ra những bí ẩn chưa từng được biết đến.
+          </p>
+        </div>
+      </main>
+      <footer>
+        <div className="text-white text-center mt-32">
+          <p>© 2025 Cosmos. All rights reserved.</p>
+          <p>Designed by Three Sheeps</p>
+        </div>
+      </footer>
     </div>
   );
 }
