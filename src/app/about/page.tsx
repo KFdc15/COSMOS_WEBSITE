@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import NavBar from "@/components/navbar";
 
 export default function About() {
@@ -31,6 +32,7 @@ export default function About() {
                   Welcome to the Cosmos website! Here, you can explore the wonders of the universe.
                 </p>
 
+<<<<<<< HEAD
             <div className="text-lg text-center w-full justify-center">
                 <p className="text-lg text-center w-full">
                     
@@ -47,6 +49,28 @@ export default function About() {
                     <a href="#" className="hover:text-white transition-colors">Terms</a>
                 </div>
             </footer>
+=======
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-9 w-full max-w-5xl mt-8 justify-items-center mx-auto justify-center">
+                    {items.map((item, idx) => (
+                        <div
+                            key={idx}
+                            className="w-64 h-60 bg-white/10 rounded-2xl shadow-lg flex flex-col items-center p-6 backdrop-blur-md"
+                        >
+                            <p className="text-white text-lg font-semibold mb-2">{item.name}</p>
+                            <p
+                                key={item.name}
+                                className="w-32 h-32 object-cover rounded-xl mb-2"
+                            />
+                            <p className="text-white text-center">{item.desc}</p>
+                        </div>
+                    ))}
+                </div>
+                <Footer/>
+            </main>
+
+            
+
+>>>>>>> b0d94292be12f4dff0c961164eff0823c82099bd
         </div>
     );
 }

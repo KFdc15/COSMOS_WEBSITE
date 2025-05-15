@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import NavBar from "@/components/navbar";
+import Footer from "@/components/Footer";
 
 export default function WikiProject() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -301,19 +302,11 @@ export default function WikiProject() {
                         </button>
                     </div>
                 )}
-
+                       <Footer/>
 
             </main>
 
-            {/* Footer */}
-            <footer className="row-start-3 flex flex-col items-center gap-2 text-white/60">
-                <p>&copy; 2025 Cosmos_Website </p>
-                <div className="flex space-x-4 text-sm">
-                    <a href="#" className="hover:text-white transition-colors">Help</a>
-                    <a href="#" className="hover:text-white transition-colors">Privacy</a>
-                    <a href="#" className="hover:text-white transition-colors">Terms</a>
-                </div>
-            </footer>
+               
 
             {/* Popup Modal */}
             {isPopupOpen && selectedItem && (
