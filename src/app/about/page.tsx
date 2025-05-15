@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import NavBar from "@/components/navbar";
 
 export default function About() {
@@ -68,17 +69,10 @@ export default function About() {
                         </div>
                     ))}
                 </div>
+                <Footer/>
             </main>
 
-                      {/* Footer */}
-            <footer className="row-start-3 flex flex-col items-center gap-2 text-white/60">
-                <p>&copy; 2025 Cosmos_Website </p>
-                <div className="flex space-x-4 text-sm">
-                    <a href="#" className="hover:text-white transition-colors">Help</a>
-                    <a href="#" className="hover:text-white transition-colors">Privacy</a>
-                    <a href="#" className="hover:text-white transition-colors">Terms</a>
-                </div>
-            </footer>
+            
 
         </div>
     );

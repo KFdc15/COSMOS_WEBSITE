@@ -30,7 +30,7 @@ type FootBarProps = {
 
 function FootBar({ selected, setSelected }: FootBarProps) {
   return (
-    <footer className="fixed bottom-0 left-0 w-full flex flex-col items-center z-50 pb-4">
+    <footer className="fixed bottom-16 left-0 w-full flex flex-col items-center z-50 pb-4">
       <div className="relative w-full max-w-2xl flex items-center justify-center h-24">
         <div className="flex flex-row gap-8 justify-center items-center w-full z-10 relative">
           {planets.map((planet, idx) => {
