@@ -87,7 +87,7 @@ export default function Home() {
           />
         ))}
       </div>
-      <main className="flex flex-row items-center justify-center w-full h-full gap-16 z-10">
+      <main className="flex flex-row items-center justify-center w-full h-full z-10">
         <PlanetComponent />
         <div className="text-white text-xl max-w-xs text-left">
           <p>{desc}</p>

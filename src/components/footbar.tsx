@@ -38,11 +38,17 @@ function FootBar({ selected, setSelected }: FootBarProps) {
             return (
               <button
                 key={planet.name}
-                className="focus:outline-none group"
+                className="focus:outline-none group relative"
                 onClick={() => setSelected(idx)}
                 aria-label={planet.name}
                 style={{ position: "relative", zIndex: 1 }}
               >
+                {/* Tên hành tinh hiện khi hover */}
+                <span
+                  className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 rounded bg-black/80 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none select-none whitespace-nowrap z-20"
+                >
+                  {planet.name}
+                </span>
                 <div
                   className={`rounded-full border-2 transition-all duration-300 flex items-center justify-center
                     ${selected === idx

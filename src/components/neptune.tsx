@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useEffect } from "react";
 import * as THREE from "three";
+import dynamic from "next/dynamic";
 
 const Neptune3D: React.FC = () => {
   const mountRef = useRef<HTMLDivElement | null>(null);
