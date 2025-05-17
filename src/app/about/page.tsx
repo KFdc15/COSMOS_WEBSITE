@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import NavBar from "@/components/navbar";
+import StarsBg from "@/components/stars_bg";
 
 export default function About() {
     return (
@@ -7,22 +8,7 @@ export default function About() {
                        <div className="fixed top-0 left-0 right-0 z-50">
                 <NavBar />
             </div>
-            <div className="fixed inset-0 -z-10 bg-black">
-                {/* Các ngôi sao */}
-                {[...Array(80)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="absolute rounded-full bg-white opacity-80"
-                        style={{
-                            width: `${Math.random() * 2 + 1}px`,
-                            height: `${Math.random() * 2 + 1}px`,
-                            top: `${Math.random() * 100}%`,
-                            left: `${Math.random() * 100}%`,
-                            boxShadow: `0 0 6px 1px white`
-                        }}
-                    />
-                ))}
-            </div>
+            <StarsBg />
 
             <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-center w-full">
               <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
