@@ -37,8 +37,8 @@ export default function About() {
                     
                 </p>
             </div>
-            </main>
             <Footer/>
+            </main>
         </div>
     );
 }

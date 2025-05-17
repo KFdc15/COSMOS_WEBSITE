@@ -9,6 +9,7 @@ import Uranus3D from "@/components/uranus";
 import Neptune3D from "@/components/neptune";
 import Venus3D from "@/components/venus";
 import Sun3D from "@/components/sun";
+import Footer from "@/components/Footer";
 
 const planets = [
   { name: "Sun", component: Sun3D },
@@ -30,7 +31,7 @@ type FootBarProps = {
 
 function FootBar({ selected, setSelected }: FootBarProps) {
   return (
-    <footer className="fixed bottom-16 left-0 w-full flex flex-col items-center z-50 pb-4">
+    <footer className="fixed bottom-14 left-0 w-full flex flex-col items-center z-50 pb-4">
       <div className="relative w-full max-w-2xl flex items-center justify-center h-24">
         <div className="flex flex-row gap-8 justify-center items-center w-full z-10 relative">
           {planets.map((planet, idx) => {
@@ -65,6 +66,9 @@ function FootBar({ selected, setSelected }: FootBarProps) {
               </button>
             );
           })}
+          <div className="fixed bottom-0 left-0 w-full z-10">
+        <Footer />
+        </div>
         </div>
       </div>
     </footer>
