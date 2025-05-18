@@ -15,7 +15,8 @@ const Signup = () => {
 
   const [errors, setErrors] = useState({
     email: '',
-    password: ''
+    password: '',
+    birthdate: ''
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,12 +50,24 @@ const Signup = () => {
         password: value !== formData.password ? 'Passwords do not match' : ''
       }));
     }
+
+    if (name === 'birthdate') {
+    const selectedDate = new Date(value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time part for accurate date comparison
+
+    setErrors(prev => ({
+      ...prev,
+      birthdate: selectedDate >= today ? 'Date of birth cannot be today or in the future' : ''
+    }));
+    }
   };
 
   const isFormValid = () => {
     return (
       formData.nickname.length > 0 &&
       formData.birthdate.length > 0 &&
+      !errors.birthdate && // Add this line
       formData.email.length > 0 &&
       formData.password.length >= 8 &&
       formData.password === formData.confirmPassword &&
@@ -100,9 +113,11 @@ return (
               name="birthdate"
               value={formData.birthdate}
               onChange={handleChange}
+              max={new Date().toISOString().split('T')[0]} // Add this line to limit date selection
               className="w-full p-3 rounded-lg bg-white/5 text-white border border-white/30 focus:border-white/60 focus:outline-none transition-colors"
               required
             />
+            {errors.birthdate && <p className="mt-1 text-red-400 text-sm">{errors.birthdate}</p>}
           </div>
           <div>
             <label className="block text-white text-sm font-medium mb-2">Email</label>
