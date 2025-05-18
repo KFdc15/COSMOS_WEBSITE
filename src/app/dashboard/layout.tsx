@@ -1,5 +1,5 @@
 import NavbarInapp from "../navbarInapp/page"
-import { StarryBackground } from "@/components/starry-background"
+import StarsBg from "@/components/stars_bg"
 
 export default function DashboardLayout({
   children,
@@ -8,7 +8,7 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="min-h-screen">
-      <StarryBackground />
+      <StarsBg />
       <NavbarInapp />
       <main className="container mx-auto p-4 sm:p-6 lg:p-8">
         {children}
