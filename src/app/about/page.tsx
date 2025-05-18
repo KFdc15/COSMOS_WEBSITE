@@ -2,8 +2,14 @@ import Footer from "@/components/Footer";
 import NavBar from "@/components/navbar";
 
 export default function About() {
+    // Example items array, replace with your actual data
+    const items = [
+        { name: "Galaxy", desc: "A system of millions or billions of stars." },
+        { name: "Nebula", desc: "A giant cloud of dust and gas in space." },
+        { name: "Black Hole", desc: "A region of spacetime with strong gravity." }
+    ];
     return (
-        <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+        <div className="grid grid-rows-[20px_1fr_2  0px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
                        <div className="fixed top-0 left-0 right-0 z-50">
                 <NavBar />
             </div>
@@ -32,45 +38,25 @@ export default function About() {
                   Welcome to the Cosmos website! Here, you can explore the wonders of the universe.
                 </p>
 
-<<<<<<< HEAD
-            <div className="text-lg text-center w-full justify-center">
-                <p className="text-lg text-center w-full">
-                    
-                </p>
-            </div>
-            </main>
-
-            {/* Footer */}
-            <footer className="row-start-3 flex flex-col items-center gap-2 text-white/60">
-                <p>&copy; 2025 Cosmos_Website </p>
-                <div className="flex space-x-4 text-sm">
-                    <a href="#" className="hover:text-white transition-colors">Help</a>
-                    <a href="#" className="hover:text-white transition-colors">Privacy</a>
-                    <a href="#" className="hover:text-white transition-colors">Terms</a>
-                </div>
-            </footer>
-=======
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-9 w-full max-w-5xl mt-8 justify-items-center mx-auto justify-center">
-                    {items.map((item, idx) => (
+                {/* Example items array, replace with your actual data */}
+                {items.map((item, idx) => (
+                    <div
+                        key={idx}
+                        className="w-64 h-60 bg-white/10 rounded-2xl shadow-lg flex flex-col items-center p-6 backdrop-blur-md"
+                    >
+                        <p className="text-white text-lg font-semibold mb-2">{item.name}</p>
                         <div
-                            key={idx}
-                            className="w-64 h-60 bg-white/10 rounded-2xl shadow-lg flex flex-col items-center p-6 backdrop-blur-md"
+                            className="w-32 h-32 object-cover rounded-xl mb-2 bg-gray-300 flex items-center justify-center"
                         >
-                            <p className="text-white text-lg font-semibold mb-2">{item.name}</p>
-                            <p
-                                key={item.name}
-                                className="w-32 h-32 object-cover rounded-xl mb-2"
-                            />
-                            <p className="text-white text-center">{item.desc}</p>
+                            {/* You can put an image or icon here */}
                         </div>
-                    ))}
-                </div>
-                <Footer/>
+                        <p className="text-white text-center">{item.desc}</p>
+                    </div>
+                ))}
+            </div>
+            <Footer/>
             </main>
-
-            
-
->>>>>>> b0d94292be12f4dff0c961164eff0823c82099bd
         </div>
     );
 }
