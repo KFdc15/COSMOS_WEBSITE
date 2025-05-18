@@ -3,6 +3,12 @@ import NavBar from "@/components/navbar";
 import StarsBg from "@/components/stars_bg";
 
 export default function About() {
+    // Example items array, replace with your actual data
+    const items = [
+        { name: "Galaxy", desc: "A system of millions or billions of stars." },
+        { name: "Nebula", desc: "A giant cloud of dust and gas in space." },
+        { name: "Black Hole", desc: "A region of spacetime with strong gravity." }
+    ];
     return (
         <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen p-4 sm:p-8 md:p-16 lg:p-20 gap-8 sm:gap-12 md:gap-16 font-[family-name:var(--font-geist-sans)]">
             <NavBar />
