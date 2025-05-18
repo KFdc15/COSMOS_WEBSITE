@@ -32,13 +32,42 @@ const Signup = () => {
       }));
     }
 
-    if (name === 'password' || name === 'confirmPassword') {
+    if (name === 'password') {
       setErrors(prev => ({
         ...prev,
-        password: formData.confirmPassword && value !== (name === 'password' ? formData.confirmPassword : formData.password)
-          ? 'Password do not match'
+        password: value.length < 8 
+          ? 'Password must be at least 8 characters'
+          : formData.confirmPassword && value !== formData.confirmPassword
+          ? 'Passwords do not match'
           : ''
       }));
+    }
+
+    if (name === 'confirmPassword') {
+      setErrors(prev => ({
+        ...prev,
+        password: value !== formData.password ? 'Passwords do not match' : ''
+      }));
+    }
+  };
+
+  const isFormValid = () => {
+    return (
+      formData.nickname.length > 0 &&
+      formData.birthdate.length > 0 &&
+      formData.email.length > 0 &&
+      formData.password.length >= 8 &&
+      formData.password === formData.confirmPassword &&
+      !errors.email &&
+      !errors.password
+    );
+  };
+
+  // Xử lý submit form
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isFormValid()) {
+      console.log('Form submitted:', formData);
     }
   };
 
@@ -51,7 +80,7 @@ return (
     <div className="flex items-start justify-center w-full mt-5">
         <div className="w-full max-w-md mx-auto p-8 rounded-2xl bg-white/10 backdrop-blur-md shadow-xl border border-white/20">
             <h2 className="text-3xl font-bold text-white mb-8 text-center">Register</h2>
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
           {/* ...các trường form như cũ... */}
           <div>
             <label className="block text-white text-sm font-medium mb-2">Nickname</label>
@@ -97,6 +126,7 @@ return (
               className="w-full p-3 rounded-lg bg-white/5 text-white border border-white/30 focus:border-white/60 focus:outline-none transition-colors"
               required
             />
+            {errors.password && <p className="mt-1 text-red-400 text-sm">{errors.password}</p>}
           </div>
           <div>
             <label className="block text-white text-sm font-medium mb-2">Confirm Password</label>
@@ -112,13 +142,18 @@ return (
           </div>
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-white hover:bg-gray-300 text-black font-bold rounded-lg transition-colors"
+            disabled={!isFormValid()}
+            className={`w-full py-3 px-4 font-bold rounded-lg transition-colors ${
+              isFormValid()
+                ? 'bg-white hover:bg-gray-300 text-black'
+                : 'bg-gray-500 cursor-not-allowed text-gray-300'
+            }`}
           >
             Sign Up
           </button>
           <div className="text-center">
             <Link 
-              href="/auth/signin" 
+              href="/auth/login" 
               className="text-white/80 hover:text-white text-sm transition-colors"
             >
               Already have an account? Sign In
