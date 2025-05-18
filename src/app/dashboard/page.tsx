@@ -71,8 +71,8 @@ export default function DashboardPage() {
     <div className="space-y-8">
       {/* Greeting Section */}
       <div className="flex flex-col gap-2">
-        <h1 className="text-4xl font-bold tracking-tight">{greeting}, Explorer!</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-4xl font-bold text-white tracking-tight">{greeting}, Explorer!</h1>
+        <p className="text-muted-foreground text-white">
           {format(new Date(), 'EEEE, MMMM do, yyyy')}
         </p>
       </div>
