@@ -14,13 +14,13 @@ export default function About() {
                 </h1>
                 <p className="text-lg text-center w-full">
                   Welcome to “Các Vì Tinh Tú” - Your Gateway to the Universe!
-                </p><br/>
+                </p>
                 <p className="text-lg text-center w-full">
                   Our website is the perfect destination for anyone passionate about astronomy and eager to explore the mysteries of outer space. Here, you’ll find in-depth information about each planet in the Solar System – from the smallest like Mercury, to the gas giants such as Jupiter, and the icy world of Neptune. Each planet is introduced with accurate scientific data, including its diameter, distance from the Sun, rotation time, climate, and unique characteristics.
-                </p><br/>
+                </p>
                 <p className="text-lg text-center w-full">
                   More than just a source of knowledge, “Các Vì Tinh Tú” provides a visually engaging and educational space, making astronomy accessible and exciting for users of all ages. Whether you're a student, a teacher, or simply a curious explorer of the cosmos, our website will take you on an inspiring journey through space.
-                </p><br/>
+                </p>
 
             <div className="text-lg text-center w-full justify-center">
                 <p className="text-lg text-center w-full">
