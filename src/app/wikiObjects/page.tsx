@@ -3,24 +3,13 @@
 import { useState, useEffect } from "react";
 import NavBar from "@/components/navbar";
 import Footer from "@/components/Footer";
+import StarsBg from "@/components/stars_bg";
 
 export default function WikiProject() {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedItem, setSelectedItem] = useState<WikiItem | null>(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-    interface Star {
-        id: number;
-        name: string;
-        size: number;
-        x: number;
-        y: number;
-        brightness: number;
-        color: string;
-        constellation: string;
-    }
-
-    const [stars, setStars] = useState<Star[]>([]);
 
     const wikiItems = [
         {
@@ -87,42 +76,6 @@ export default function WikiProject() {
 
     const categories = [...new Set(wikiItems.map(item => item.category))];
 
-    // API stars
-    useEffect(() => {
-        const fetchStars = async () => {
-            try {
-                const mockApiStars = Array.from({ length: 20 }, (_, i) => ({
-                    id: i,
-                    name: `Star-${i + 1}`,
-                    size: Math.random() * 3 + 2,
-                    x: Math.random() * 100,
-                    y: Math.random() * 100,
-                    brightness: Math.random() * 10 + 5,
-                    color: ['white', 'yellow', 'cyan', 'gold'][Math.floor(Math.random() * 4)],
-                    constellation: ['Orion', 'Ursa Major', 'Cassiopeia', 'Andromeda'][Math.floor(Math.random() * 4)]
-                }));
-
-                setStars(mockApiStars);
-            } catch (error) {
-                console.error('Lỗi khi fetch stars từ API:', error);
-                setStars([]);
-            }
-        };
-
-        fetchStars();
-
-        const interval = setInterval(() => {
-            setStars(prevStars =>
-                prevStars.map(star => ({
-                    ...star,
-                    x: (star.x + 0.1) % 100,
-                    y: star.y + Math.sin(Date.now() * 0.001 + star.id) * 0.01
-                }))
-            );
-        }, 5000);
-
-        return () => clearInterval(interval);
-    }, []);
 
     interface WikiItem {
         id: number;
@@ -165,40 +118,8 @@ export default function WikiProject() {
 
     return (
         <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-sans">
-      
-    <NavBar />
-
-
-            {/* Stars Background */}
-            <div className="fixed inset-0 -z-10 bg-black">
-                {[...Array(80)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="absolute rounded-full bg-white opacity-80"
-                        style={{
-                            width: `${Math.random() * 2 + 1}px`,
-                            height: `${Math.random() * 2 + 1}px`,
-                            top: `${Math.random() * 100}%`,
-                            left: `${Math.random() * 100}%`,
-                            boxShadow: `0 0 6px 1px white`
-                        }}
-                    />
-                ))}
-
-                {stars.map((star, i) => (
-                    <div
-                        key={`api-star-${i}`}
-                        className="absolute rounded-full bg-yellow-200 opacity-90"
-                        style={{
-                            width: `${star.size}px`,
-                            height: `${star.size}px`,
-                            top: `${star.y}%`,
-                            left: `${star.x}%`,
-                            boxShadow: `0 0 ${star.brightness}px 2px ${star.color}`
-                        }}
-                    />
-                ))}
-            </div>
+            <NavBar />
+            <StarsBg />
 
             <main className="flex flex-col gap-10 row-start-2 items-center w-full max-w-6xl">
                 {/* NASA APOD Section */}

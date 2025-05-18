@@ -132,7 +132,7 @@ const Earth3D: React.FC = () => {
   return (
     <div
       ref={mountRef}
-      style={{ width: "100%", height: "400px", background: "transparent" }}
+      style={{ width: "100%", height: "350px", background: "transparent" }}
     />
   );
 };

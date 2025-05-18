@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState,useEffect , useCallback } from 'react';
 import NavBar from '@/components/navbar';
-import { Play, X } from 'lucide-react';
+import { Play, Star, X } from 'lucide-react';
 import Footer from '@/components/Footer';
+import StarsBg from '@/components/stars_bg';
 
 export function Resources() {
     const [selectedVideo, setSelectedVideo] = useState<{
@@ -79,21 +80,7 @@ export function Resources() {
         <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
             <NavBar />
 
-            <div className="fixed inset-0 -z-10 bg-black">
-                {[...Array(80)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="absolute rounded-full bg-white opacity-80"
-                        style={{
-                            width: `${Math.random() * 2 + 1}px`,
-                            height: `${Math.random() * 2 + 1}px`,
-                            top: `${Math.random() * 100}%`,
-                            left: `${Math.random() * 100}%`,
-                            boxShadow: `0 0 6px 1px white`
-                        }}
-                    />
-                ))}
-            </div>
+            <StarsBg />
 
             <main className="flex flex-col gap-12 row-start-2 items-center w-full">
                 <div className="text-center space-y-4">

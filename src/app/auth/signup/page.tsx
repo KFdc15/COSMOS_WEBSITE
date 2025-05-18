@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import NavBar from '@/components/navbar';
 import Link from 'next/link';
+import StarsBg from '@/components/stars_bg';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -27,46 +28,59 @@ const Signup = () => {
     if (name === 'email') {
       setErrors(prev => ({
         ...prev,
-        email: value.includes('@') ? '' : 'Email phải chứa ký tự @'
+        email: value.includes('@') ? '' : 'Email have to include @'
       }));
     }
 
-    if (name === 'password' || name === 'confirmPassword') {
+    if (name === 'password') {
       setErrors(prev => ({
         ...prev,
-        password: formData.confirmPassword && value !== (name === 'password' ? formData.confirmPassword : formData.password)
-          ? 'Mật khẩu không khớp'
+        password: value.length < 8 
+          ? 'Password must be at least 8 characters'
+          : formData.confirmPassword && value !== formData.confirmPassword
+          ? 'Passwords do not match'
           : ''
+      }));
+    }
+
+    if (name === 'confirmPassword') {
+      setErrors(prev => ({
+        ...prev,
+        password: value !== formData.password ? 'Passwords do not match' : ''
       }));
     }
   };
 
+  const isFormValid = () => {
+    return (
+      formData.nickname.length > 0 &&
+      formData.birthdate.length > 0 &&
+      formData.email.length > 0 &&
+      formData.password.length >= 8 &&
+      formData.password === formData.confirmPassword &&
+      !errors.email &&
+      !errors.password
+    );
+  };
+
+  // Xử lý submit form
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isFormValid()) {
+      console.log('Form submitted:', formData);
+    }
+  };
+
 return (
-  <div className="min-h-screen flex flex-col items-center justify-center bg-black relative">
+  <div className="min-h-screen flex flex-col items-center justify-center sm:p-8 md:p-16 lg:p-20 gap-8 sm:gap-12 md:gap-16 font-[family-name:var(--font-geist-sans)] relative">
     <NavBar />
-    
-    {/* Background stars */}
-    <div className="fixed inset-0 -z-10">
-      {[...Array(80)].map((_, i) => (
-        <div
-          key={i}
-          className="absolute rounded-full bg-white opacity-80"
-          style={{
-            width: `${Math.random() * 2 + 1}px`,
-            height: `${Math.random() * 2 + 1}px`,
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-            boxShadow: `0 0 6px 1px white`
-          }}
-        />
-      ))}
-    </div>
+    <StarsBg />
 
     {/* Sign up form */}
-    <div className="flex items-start justify-center w-full mt-20">
+    <div className="flex items-start justify-center w-full mt-5">
         <div className="w-full max-w-md mx-auto p-8 rounded-2xl bg-white/10 backdrop-blur-md shadow-xl border border-white/20">
-            <h2 className="text-3xl font-bold text-white mb-8 text-center">Đăng ký tài khoản</h2>
-            <form className="space-y-6">
+            <h2 className="text-3xl font-bold text-white mb-8 text-center">Register</h2>
+            <form onSubmit={handleSubmit} className="space-y-6">
           {/* ...các trường form như cũ... */}
           <div>
             <label className="block text-white text-sm font-medium mb-2">Nickname</label>
@@ -80,7 +94,7 @@ return (
             />
           </div>
           <div>
-            <label className="block text-white text-sm font-medium mb-2">Ngày sinh</label>
+            <label className="block text-white text-sm font-medium mb-2">Date Of Birth</label>
             <input
               type="date"
               name="birthdate"
@@ -103,7 +117,7 @@ return (
             {errors.email && <p className="mt-1 text-red-400 text-sm">{errors.email}</p>}
           </div>
           <div>
-            <label className="block text-white text-sm font-medium mb-2">Mật khẩu</label>
+            <label className="block text-white text-sm font-medium mb-2">Password</label>
             <input
               type="password"
               name="password"
@@ -112,9 +126,10 @@ return (
               className="w-full p-3 rounded-lg bg-white/5 text-white border border-white/30 focus:border-white/60 focus:outline-none transition-colors"
               required
             />
+            {errors.password && <p className="mt-1 text-red-400 text-sm">{errors.password}</p>}
           </div>
           <div>
-            <label className="block text-white text-sm font-medium mb-2">Xác nhận mật khẩu</label>
+            <label className="block text-white text-sm font-medium mb-2">Confirm Password</label>
             <input
               type="password"
               name="confirmPassword"
@@ -127,16 +142,21 @@ return (
           </div>
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+            disabled={!isFormValid()}
+            className={`w-full py-3 px-4 font-bold rounded-lg transition-colors ${
+              isFormValid()
+                ? 'bg-white hover:bg-gray-300 text-black'
+                : 'bg-gray-500 cursor-not-allowed text-gray-300'
+            }`}
           >
-            Đăng ký
+            Sign Up
           </button>
           <div className="text-center">
             <Link 
-              href="/auth/signin" 
+              href="/auth/login" 
               className="text-white/80 hover:text-white text-sm transition-colors"
             >
-              Đã có tài khoản? Đăng nhập tại đây
+              Already have an account? Sign In
             </Link>
           </div>
         </form>

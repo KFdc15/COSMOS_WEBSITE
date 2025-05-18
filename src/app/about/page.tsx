@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import NavBar from "@/components/navbar";
+import StarsBg from "@/components/stars_bg";
 
 export default function About() {
     // Example items array, replace with your actual data
@@ -9,51 +10,28 @@ export default function About() {
         { name: "Black Hole", desc: "A region of spacetime with strong gravity." }
     ];
     return (
-        <div className="grid grid-rows-[20px_1fr_2  0px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-                       <div className="fixed top-0 left-0 right-0 z-50">
-                <NavBar />
-            </div>
-            <div className="fixed inset-0 -z-10 bg-black">
-                {/* Các ngôi sao */}
-                {[...Array(80)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="absolute rounded-full bg-white opacity-80"
-                        style={{
-                            width: `${Math.random() * 2 + 1}px`,
-                            height: `${Math.random() * 2 + 1}px`,
-                            top: `${Math.random() * 100}%`,
-                            left: `${Math.random() * 100}%`,
-                            boxShadow: `0 0 6px 1px white`
-                        }}
-                    />
-                ))}
-            </div>
+        <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen p-4 sm:p-8 md:p-16 lg:p-20 gap-8 sm:gap-12 md:gap-16 font-[family-name:var(--font-geist-sans)]">
+            <NavBar />
+            <StarsBg />
 
             <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-center w-full">
               <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
                 About Us
                 </h1>
                 <p className="text-lg text-center w-full">
-                  Welcome to the Cosmos website! Here, you can explore the wonders of the universe.
-                </p>
+                  Welcome to “Các Vì Tinh Tú” - Your Gateway to the Universe!
+                </p><br/>
+                <p className="text-lg text-center w-full">
+                  Our website is the perfect destination for anyone passionate about astronomy and eager to explore the mysteries of outer space. Here, you’ll find in-depth information about each planet in the Solar System – from the smallest like Mercury, to the gas giants such as Jupiter, and the icy world of Neptune. Each planet is introduced with accurate scientific data, including its diameter, distance from the Sun, rotation time, climate, and unique characteristics.
+                </p><br/>
+                <p className="text-lg text-center w-full">
+                  More than just a source of knowledge, “Các Vì Tinh Tú” provides a visually engaging and educational space, making astronomy accessible and exciting for users of all ages. Whether you're a student, a teacher, or simply a curious explorer of the cosmos, our website will take you on an inspiring journey through space.
+                </p><br/>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-9 w-full max-w-5xl mt-8 justify-items-center mx-auto justify-center">
-                {/* Example items array, replace with your actual data */}
-                {items.map((item, idx) => (
-                    <div
-                        key={idx}
-                        className="w-64 h-60 bg-white/10 rounded-2xl shadow-lg flex flex-col items-center p-6 backdrop-blur-md"
-                    >
-                        <p className="text-white text-lg font-semibold mb-2">{item.name}</p>
-                        <div
-                            className="w-32 h-32 object-cover rounded-xl mb-2 bg-gray-300 flex items-center justify-center"
-                        >
-                            {/* You can put an image or icon here */}
-                        </div>
-                        <p className="text-white text-center">{item.desc}</p>
-                    </div>
-                ))}
+            <div className="text-lg text-center w-full justify-center">
+                <p className="text-lg text-center w-full">
+                    
+                </p>
             </div>
             <Footer/>
             </main>
