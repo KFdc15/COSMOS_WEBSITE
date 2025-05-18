@@ -28,7 +28,7 @@ const Signup = () => {
     if (name === 'email') {
       setErrors(prev => ({
         ...prev,
-        email: value.includes('@') ? '' : 'Email phải chứa ký tự @'
+        email: value.includes('@') ? '' : 'Email have to include @'
       }));
     }
 
@@ -36,19 +36,19 @@ const Signup = () => {
       setErrors(prev => ({
         ...prev,
         password: formData.confirmPassword && value !== (name === 'password' ? formData.confirmPassword : formData.password)
-          ? 'Mật khẩu không khớp'
+          ? 'Password do not match'
           : ''
       }));
     }
   };
 
 return (
-  <div className="min-h-screen flex flex-col items-center justify-center relative">
+  <div className="min-h-screen flex flex-col items-center justify-center sm:p-8 md:p-16 lg:p-20 gap-8 sm:gap-12 md:gap-16 font-[family-name:var(--font-geist-sans)] relative">
     <NavBar />
     <StarsBg />
 
     {/* Sign up form */}
-    <div className="flex items-start justify-center w-full mt-20">
+    <div className="flex items-start justify-center w-full mt-5">
         <div className="w-full max-w-md mx-auto p-8 rounded-2xl bg-white/10 backdrop-blur-md shadow-xl border border-white/20">
             <h2 className="text-3xl font-bold text-white mb-8 text-center">Register</h2>
             <form className="space-y-6">
