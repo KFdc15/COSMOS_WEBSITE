@@ -20,10 +20,6 @@ const navItems = [
     href: "/dashboard",
   },
   {
-    title: "Wiki Objects",
-    href: "/dashboard/wiki",
-  },
-  {
     title: "Explore",
     href: "/dashboard/explore",
   },

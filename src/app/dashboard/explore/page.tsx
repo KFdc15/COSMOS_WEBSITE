@@ -1,89 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Compass, Star, Clock, Bookmark, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Bookmark, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-
-interface ExploreCategory {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  objects: CelestialObject[];
-}
-
-interface CelestialObject {
-  name: string;
-  type: string;
-  imageUrl: string;
-  description: string;
-  visibility: string;
-  bestTime: string;
-}
+import { useCelestialObject } from "@/hooks/useCelestialObject";
 
 export default function ExplorePage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("featured");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [objects, setObjects] = useState<{ name: string }[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const categories: ExploreCategory[] = [
-    {
-      title: "Featured",
-      description: "Handpicked celestial wonders",
-      icon: <Star className="h-5 w-5" />,
-      objects: [
-        {
-          name: "Saturn's Rings",
-          type: "Planet Feature",
-          imageUrl: "/images/saturn-rings.jpg",
-          description: "The most extensive planetary ring system of any planet in the Solar System.",
-          visibility: "Visible with small telescope",
-          bestTime: "Opposition in August 2024",
-        },
-        {
-          name: "Great Red Spot",
-          type: "Atmospheric Feature",
-          imageUrl: "/images/jupiter-spot.jpg",
-          description: "A persistent high-pressure region in Jupiter's atmosphere.",
-          visibility: "Visible with medium telescope",
-          bestTime: "Best at night",
-        },
-      ],
-    },
-    {
-      title: "Tonight's Best",
-      description: "Optimal viewing conditions",
-      icon: <Clock className="h-5 w-5" />,
-      objects: [
-        {
-          name: "Mars",
-          type: "Planet",
-          imageUrl: "/images/mars.jpg",
-          description: "The Red Planet is particularly bright tonight.",
-          visibility: "Visible to naked eye",
-          bestTime: "Evening",
-        },
-        {
-          name: "Betelgeuse",
-          type: "Star",
-          imageUrl: "/images/betelgeuse.jpg",
-          description: "A red supergiant star in Orion.",
-          visibility: "Visible to naked eye",
-          bestTime: "Early night",
-        },
-      ],
-    },
-  ];
+  useEffect(() => {
+    const fetchObjects = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch("http://localhost:8000/api/search?name=");
+        if (!response.ok) throw new Error("Failed to fetch celestial objects");
+        const data = await response.json();
+        setObjects(data.map((item: any) => ({ name: item.name })));
+      } catch {
+        setObjects([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchObjects();
+  }, []);
 
-  // Filter objects based on search query
   const filteredObjects = searchQuery
-    ? categories
-        .flatMap(category => category.objects)
-        .filter(object => 
-          object.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-          object.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          object.description.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-    : categories.find(cat => cat.title.toLowerCase() === selectedCategory)?.objects || [];
+    ? objects.filter(object =>
+        object.name && object.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : objects;
 
   return (
     <div className="space-y-8">
@@ -108,81 +57,124 @@ export default function ExplorePage() {
         </div>
       </div>
 
-      {/* Only show categories when not searching */}
-      {!searchQuery && (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category) => (
-            <Card
-              key={category.title}
-              className={`cursor-pointer transition-colors bg-white/10 border-white/20 ${
-                selectedCategory === category.title.toLowerCase()
-                  ? "border-primary"
-                  : ""
-              }`}
-              onClick={() => {
-                setSelectedCategory(category.title.toLowerCase());
-                setSearchQuery("");
-              }}
-            >
-              <CardHeader className="flex flex-row items-center gap-4">
-                <div className="rounded-full bg-primary/10 p-2">
-                  {category.icon}
-                </div>
-                <div>
-                  <CardTitle className="text-lg text-white/90">{category.title}</CardTitle>
-                  <CardDescription className="text-white/70">{category.description}</CardDescription>
-                </div>
-              </CardHeader>
-            </Card>
-          ))}
-        </div>
-      )}
-
-      {/* Search Results or Selected Category Objects */}
+      {/* Results */}
       <div className="grid gap-6 md:grid-cols-2">
-        {filteredObjects.map((object, index) => (
-          <Card key={index} className="overflow-hidden bg-white/10 border-white/20">
-            <div className="relative h-48">
-              <img
-                src={object.imageUrl}
-                alt={object.name}
-                className="w-full h-full object-cover"
-              />
-              <button className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white/90">
-                <Bookmark className="h-4 w-4" />
-              </button>
-            </div>
-            <CardHeader>
-              <CardTitle className="text-white/90">{object.name}</CardTitle>
-              <CardDescription className="text-white/70">{object.type}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <p className="text-sm text-white/70">
-                  {object.description}
-                </p>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="text-white/50">Visibility</p>
-                    <p className="font-medium text-white/90">{object.visibility}</p>
-                  </div>
-                  <div>
-                    <p className="text-white/50">Best Time</p>
-                    <p className="font-medium text-white/90">{object.bestTime}</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-        
-        {/* No results message */}
-        {filteredObjects.length === 0 && (
+        {isLoading ? (
+          <div className="col-span-2 text-center py-12">
+            <p className="text-white/70">Loading...</p>
+          </div>
+        ) : filteredObjects.length === 0 ? (
           <div className="col-span-2 text-center py-12">
             <p className="text-white/70">No celestial objects found matching your search.</p>
           </div>
+        ) : (
+          filteredObjects.map((object) => (
+            <CelestialCard key={object.name} name={object.name} />
+          ))
         )}
       </div>
     </div>
+  );
+}
+
+// Card component sử dụng hook để fetch từng object detail
+function CelestialCard({ name }: { name: string }) {
+  const { object, loading, fetchCelestialObject } = useCelestialObject();
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [bookmarkLoading, setBookmarkLoading] = useState(false);
+
+  useEffect(() => {
+    fetchCelestialObject(name);
+    // eslint-disable-next-line
+  }, [name]);
+
+  // Kiểm tra trạng thái bookmark khi Card mount
+  useEffect(() => {
+    const checkBookmark = async () => {
+      try {
+        const res = await fetch(`http://localhost:8000/api/favorite/check?name=${encodeURIComponent(name)}`, {
+          credentials: "include",
+        });
+        const data = await res.json();
+        setIsBookmarked(data.is_favorited);
+      } catch {
+        setIsBookmarked(false);
+      }
+    };
+    checkBookmark();
+  }, [name]);
+
+  // Toggle bookmark
+  const handleBookmark = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setBookmarkLoading(true);
+    try {
+      const res = await fetch("http://localhost:8000/api/favorite/toggle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ name }),
+      });
+      const data = await res.json();
+      setIsBookmarked(data.is_favorited);
+    } catch {
+      // handle error if needed
+    } finally {
+      setBookmarkLoading(false);
+    }
+  };
+  if (loading || !object) {
+    return (
+      <Card className="overflow-hidden bg-white/10 border-white/20">
+        <div className="h-48 flex items-center justify-center text-white/70">Loading...</div>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="overflow-hidden bg-white/10 border-white/20">
+      <div className="relative h-48">
+        {object.imageUrl && (
+          <img
+            src={object.imageUrl}
+            alt={object.name}
+            className="w-full h-full object-cover"
+          />
+        )}
+        <button
+          className={`absolute top-4 right-4 p-2 rounded-full transition ${
+            isBookmarked ? "bg-yellow-400/80 text-black" : "bg-white/10 text-white/90"
+          } hover:bg-yellow-400/90`}
+          onClick={handleBookmark}
+          disabled={bookmarkLoading}
+          aria-label="Bookmark"
+        >
+          <Bookmark
+            className={`h-4 w-4 ${isBookmarked ? "fill-yellow-400 stroke-yellow-400" : ""}`}
+            fill={isBookmarked ? "#facc15" : "none"}
+          />
+        </button>
+      </div>
+      <CardHeader>
+        <CardTitle className="text-white/90">{object.name}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <p className="text-sm text-white/70">{object.description}</p>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="text-white/50">Distance (light years)</p>
+              <p className="font-medium text-white/90">{object.distance_light_years ?? "Unknown"}</p>
+            </div>
+            <div>
+              <p className="text-white/50">Mass (solar mass)</p>
+              <p className="font-medium text-white/90">{object.mass_solar ?? "Unknown"}</p>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
