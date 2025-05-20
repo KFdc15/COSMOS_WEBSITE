@@ -117,7 +117,7 @@ export default function BookmarksPage() {
           </div>
         ) : (
           filteredObjects.map((object) => (
-            <Card key={object.id} className="overflow-hidden bg-white/10 border-white/20">
+            <Card key={object.id ? `${object.id}-${object.name}` : object.name} className="overflow-hidden bg-white/10 border-white/20">
               <div className="relative h-48">
                 {object.imageUrl && (
                   <img
