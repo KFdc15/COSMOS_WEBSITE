@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, FolderOpen, Star, Clock, Trash2 } from "lucide-react";
+import { Search, FolderOpen, Star, Trash2 } from "lucide-react";
 
 interface BookmarkedObject {
+  id: number;
   name: string;
   type: string;
   dateAdded: string;
@@ -24,33 +25,51 @@ interface Collection {
 
 export default function BookmarksPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [bookmarkedObjects, setBookmarkedObjects] = useState<BookmarkedObject[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const bookmarkedObjects: BookmarkedObject[] = [
-    {
-      name: "Andromeda Galaxy",
-      type: "Galaxy",
-      dateAdded: "2024-03-20",
-      imageUrl: "/images/andromeda.jpg",
-      notes: "Beautiful spiral structure",
-      collection: "Galaxies",
-    },
-    {
-      name: "Orion Nebula",
-      type: "Nebula",
-      dateAdded: "2024-03-19",
-      imageUrl: "/images/orion-nebula.jpg",
-      collection: "Nebulae",
-    },
-    {
-      name: "Pleiades",
-      type: "Star Cluster",
-      dateAdded: "2024-03-18",
-      imageUrl: "/images/pleiades.jpg",
-      notes: "Best viewed in winter",
-      collection: "Star Clusters",
-    },
-  ];
+  useEffect(() => {
+    const fetchBookmarks = async () => {
+      setIsLoading(true);
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:8000/api/favourite", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("Failed to fetch bookmarks");
+        const data = await response.json();
+        // Map lại dữ liệu nếu cần, tùy theo backend trả về
+        setBookmarkedObjects(
+          data.map((item: any) => ({
+            id: item.id,
+            name: item.celestial_body_name || item.name,
+            type: item.celestial_body_type || item.type,
+            dateAdded: item.date_added || "",
+            imageUrl: item.image_url || "/images/default.jpg",
+            notes: item.notes,
+            collection: item.collection_name || "",
+          }))
+        );
+      } catch (error) {
+        setBookmarkedObjects([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
+    fetchBookmarks();
+  }, []);
+
+  const filteredObjects = bookmarkedObjects.filter(object =>
+    object.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    object.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (object.collection?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
+  );
+
+  // Nếu bạn muốn giữ collections tĩnh, giữ nguyên phần collections như cũ
   const collections: Collection[] = [
     {
       name: "Galaxies",
@@ -71,12 +90,6 @@ export default function BookmarksPage() {
       icon: <Star className="h-5 w-5" />,
     },
   ];
-
-  const filteredObjects = bookmarkedObjects.filter(object =>
-    object.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    object.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    object.collection?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <div className="space-y-8">
@@ -104,43 +117,47 @@ export default function BookmarksPage() {
         </TabsList>
 
         <TabsContent value="objects" className="space-y-4 mt-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            {filteredObjects.map((object, index) => (
-              <Card key={index} className="overflow-hidden bg-white/10 border-white/20">
-                <div className="relative h-48">
-                  <img
-                    src={object.imageUrl}
-                    alt={object.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <button className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-destructive">
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-                <CardHeader>
-                  <CardTitle className="text-white/90">{object.name}</CardTitle>
-                  <CardDescription className="text-white/70">
-                    {object.type} • Added {object.dateAdded}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {object.notes && (
-                      <p className="text-sm text-white/70">
-                        {object.notes}
-                      </p>
-                    )}
-                    {object.collection && (
-                      <div className="flex items-center gap-2 text-sm text-white/70">
-                        <FolderOpen className="h-4 w-4" />
-                        <span>{object.collection}</span>
-                      </div>
-                    )}
+          {isLoading ? (
+            <div className="text-white/70">Loading...</div>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2">
+              {filteredObjects.map((object) => (
+                <Card key={object.id} className="overflow-hidden bg-white/10 border-white/20">
+                  <div className="relative h-48">
+                    <img
+                      src={object.imageUrl}
+                      alt={object.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <button className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-destructive">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  <CardHeader>
+                    <CardTitle className="text-white/90">{object.name}</CardTitle>
+                    <CardDescription className="text-white/70">
+                      {object.type} • Added {object.dateAdded}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {object.notes && (
+                        <p className="text-sm text-white/70">
+                          {object.notes}
+                        </p>
+                      )}
+                      {object.collection && (
+                        <div className="flex items-center gap-2 text-sm text-white/70">
+                          <FolderOpen className="h-4 w-4" />
+                          <span>{object.collection}</span>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="collections" className="space-y-4 mt-6">
@@ -170,4 +187,4 @@ export default function BookmarksPage() {
       </Tabs>
     </div>
   );
-} 
+}

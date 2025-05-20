@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, Filter } from "lucide-react";
 
 interface CelestialObject {
+  id: number;
   name: string;
   type: string;
   distance: string;
@@ -17,51 +18,46 @@ interface CelestialObject {
 
 export default function WikiPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [celestialObjects, setCelestialObjects] = useState<CelestialObject[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const celestialObjects: CelestialObject[] = [
-    {
-      name: "Andromeda Galaxy",
-      type: "Galaxy",
-      distance: "2.537 million light years",
-      magnitude: "-21.5",
-      constellation: "Andromeda",
-      imageUrl: "/images/andromeda.jpg",
-      description: "The Andromeda Galaxy is a spiral galaxy approximately 2.5 million light-years from Earth.",
-    },
-    {
-      name: "Orion Nebula",
-      type: "Nebula",
-      distance: "1,344 light years",
-      magnitude: "4.0",
-      constellation: "Orion",
-      imageUrl: "/images/orion-nebula.jpg",
-      description: "The Orion Nebula is a diffuse nebula situated in the Milky Way.",
-    },
-    {
-      name: "Pleiades",
-      type: "Star Cluster",
-      distance: "444 light years",
-      magnitude: "1.6",
-      constellation: "Taurus",
-      imageUrl: "/images/pleiades.jpg",
-      description: "The Pleiades is an open star cluster containing middle-aged, hot B-type stars.",
-    },
-    {
-      name: "Crab Nebula",
-      type: "Supernova Remnant",
-      distance: "6,523 light years",
-      magnitude: "8.4",
-      constellation: "Taurus",
-      imageUrl: "/images/crab-nebula.jpg",
-      description: "The Crab Nebula is a supernova remnant in the constellation of Taurus.",
-    },
-  ];
+  const fetchCelestialObjects = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('http://localhost:8000/api/information');
+      if (!response.ok) throw new Error("Failed to fetch celestial bodies");
+      const data = await response.json();
+      setCelestialObjects(data);
+    } catch (error) {
+      console.error(error);
+      setCelestialObjects([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const filteredObjects = celestialObjects.filter(object =>
-    object.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    object.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    object.constellation.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const fetchSearchResults = async (query: string) => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`http://localhost:8000/api/search?q=${encodeURIComponent(searchQuery)}`);
+      if (!response.ok) throw new Error("Failed to fetch search results");
+      const data = await response.json();
+      setCelestialObjects(data);
+    } catch (error) {
+      console.error(error);
+      setCelestialObjects([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      fetchCelestialObjects();
+    } else {
+      fetchSearchResults(searchQuery);
+    }
+  }, [searchQuery]);
 
   return (
     <div className="space-y-8">
@@ -88,41 +84,49 @@ export default function WikiPage() {
         </button>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {filteredObjects.map((object, index) => (
-          <Card key={index} className="overflow-hidden bg-white/10 border-white/20">
-            <div className="relative h-48">
-              <div className="absolute inset-0 bg-black/20" />
-              <img
-                src={object.imageUrl}
-                alt={object.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <CardHeader>
-              <CardTitle className="text-white/90">{object.name}</CardTitle>
-              <CardDescription className="text-white/70">{object.type} in {object.constellation}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="text-white/50">Distance</p>
-                    <p className="font-medium text-white/90">{object.distance}</p>
-                  </div>
-                  <div>
-                    <p className="text-white/50">Magnitude</p>
-                    <p className="font-medium text-white/90">{object.magnitude}</p>
-                  </div>
+      {isLoading ? (
+        <div className="text-white/70">Loading...</div>
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2">
+          {celestialObjects.length === 0 ? (
+            <div className="text-white/60">No objects found.</div>
+          ) : (
+            celestialObjects.map((object) => (
+              <Card key={object.id} className="overflow-hidden bg-white/10 border-white/20">
+                <div className="relative h-48">
+                  <div className="absolute inset-0 bg-black/20" />
+                  <img
+                    src={object.imageUrl}
+                    alt={object.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <p className="text-sm text-white/70">
-                  {object.description}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                <CardHeader>
+                  <CardTitle className="text-white/90">{object.name}</CardTitle>
+                  <CardDescription className="text-white/70">{object.type} in {object.constellation}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-white/50">Distance</p>
+                        <p className="font-medium text-white/90">{object.distance}</p>
+                      </div>
+                      <div>
+                        <p className="text-white/50">Magnitude</p>
+                        <p className="font-medium text-white/90">{object.magnitude}</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-white/70">
+                      {object.description}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
-} 
+}

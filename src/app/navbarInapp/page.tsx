@@ -1,4 +1,5 @@
-import React from 'react'
+"use client"
+import React, { useEffect, useState } from 'react'
 import {
   Sheet,
   SheetContent,
@@ -10,6 +11,8 @@ import { Menu, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { useRouter } from 'next/navigation'
+import { useUser } from '@/hooks/useUser'
 
 const navItems = [
   {
@@ -42,6 +45,14 @@ const userNavItems = [
 ]
 
 const NavbarInapp = () => {
+  const { user, loading } = useUser();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    router.push('/auth/login');
+  };
+
   return (
     <div className='px-2 sm:px-4 py-2 sm:py-3 z-50 bg-white/10 backdrop-blur-md sticky top-0 left-0 right-0 flex justify-between items-center text-white shadow-lg'>
       {/* Left side - Logo and Menu */}
@@ -109,14 +120,19 @@ const NavbarInapp = () => {
             <div className="block sm:hidden mt-6 pt-6 border-t border-white/10">
               <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/5">
                 <div className="rounded-full w-8 h-8 bg-white/20 flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">G</span>
+                  <span className="text-white text-sm font-medium">
+                    {user?.name ? user.name.charAt(0).toUpperCase() : "G"}
+                  </span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium">Guest User</p>
-                  <p className="text-xs text-white/50">guest@example.com</p>
+                  <p className="text-sm font-medium">{user?.name || "Guest User"}</p>
+                  <p className="text-xs text-white/50">{user?.email || "guest@example.com"}</p>
                 </div>
               </div>
-              <Button variant="ghost" className="w-full mt-2 text-red-400 hover:text-red-300 hover:bg-red-500/20">
+              <Button 
+                onClick={handleLogout}
+                variant="ghost" 
+                className="w-full mt-2 text-red-400 hover:text-red-300 hover:bg-red-500/20">
                 Log out
               </Button>
             </div>
@@ -146,11 +162,27 @@ const NavbarInapp = () => {
                 <SheetTitle className="text-white">User Profile</SheetTitle>
                 <div className="flex items-center gap-4 px-2">
                   <div className="rounded-full w-10 h-10 bg-white/20 flex items-center justify-center">
-                    <span className="text-white text-lg font-medium">G</span>
+                    <span className="text-white text-lg font-medium">
+                      {user?.name ? user.name.charAt(0).toUpperCase() : "G"}
+                    </span>
                   </div>
                   <div>
-                    <h2 className="text-lg font-semibold">Guest User</h2>
-                    <p className="text-sm text-white/50">guest@example.com</p>
+                    {loading ? (
+                      <>
+                        <p className="text-sm font-medium">Loading...</p>
+                        <p className="text-xs text-white/50">&nbsp;</p>
+                      </>
+                    ) : user ? (
+                      <>
+                        <p className="text-sm font-medium">{user.name}</p>
+                        <p className="text-xs text-white/50">{user.email}</p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-sm font-medium">Guest User</p>
+                        <p className="text-xs text-white/50">guest@example.com</p>
+                      </>
+                    )}
                   </div>
                 </div>
               </SheetHeader>
@@ -170,7 +202,10 @@ const NavbarInapp = () => {
                 ))}
               </nav>
 
-              <Button variant="ghost" className="mt-4 text-red-400 hover:text-red-300 hover:bg-red-500/20">
+              <Button 
+                onClick={handleLogout}
+                variant="ghost" 
+                className="mt-4 text-red-400 hover:text-red-300 hover:bg-red-500/20">
                 Log out
               </Button>
             </SheetContent>

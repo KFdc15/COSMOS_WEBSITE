@@ -3,17 +3,21 @@ import React, { useState } from 'react';
 import NavBar from '@/components/navbar';
 import Link from 'next/link';
 import StarsBg from '@/components/stars_bg';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    usernameOrEmail: '',
+    email: '',
     password: ''
   });
 
   const [errors, setErrors] = useState({
-    usernameOrEmail: '',
-    password: ''
+    email: '',
+    password: '',
+    general: ''
   });
+
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -22,16 +26,13 @@ const Login = () => {
       [name]: value
     }));
 
-    if (name === 'usernameOrEmail') {
+    if (name === 'email') {
       setErrors(prev => ({
         ...prev,
-        usernameOrEmail: value.includes('@') ? 
-          (value.includes('@') && !value.includes('.') ? 'Invalid email format' : '') 
-          : ''
+        email: value.includes('@') && value.includes('.') ? '' : 'Invalid email format'
       }));
     }
 
-    // Thêm validation cho password
     if (name === 'password') {
       setErrors(prev => ({
         ...prev,
@@ -40,22 +41,46 @@ const Login = () => {
     }
   };
 
-  // Kiểm tra form có hợp lệ không
-  const isFormValid = () => {
-    return (
-      formData.usernameOrEmail.length > 0 &&
-      formData.password.length >= 8 &&
-      !errors.usernameOrEmail &&
-      !errors.password
-    );
-  };
+  const isFormValid = () => (
+  formData.email.length > 0 &&
+  formData.password.length >= 8 &&
+  !errors.email &&
+  !errors.password
+  );
 
-  // Xử lý submit form
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isFormValid()) {
-      // Xử lý logic đăng nhập ở đây
-      console.log('Form submitted:', formData);
+      try {
+        const response = await fetch('http://localhost:8000/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
+          credentials :'include'
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem('token', data.token);
+          router.push('/dashboard');
+        } else {
+          const errorData = await response.json();
+          setErrors(prev => ({
+            ...prev,
+            general: errorData.error || 'Invalid email or password'
+          }));
+        }
+      } catch (error) {
+        setErrors(prev => ({
+          ...prev,
+          general: 'Network error occurred'
+        }));
+      }
     }
   };
 
@@ -70,19 +95,19 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-white text-sm font-medium mb-2">
-                Nickname or Email
+                Email
               </label>
               <input
-                type="text"
-                name="usernameOrEmail"
-                value={formData.usernameOrEmail}
+                type="email"
+                name="email"
+                value={formData.email}
                 onChange={handleChange}
-                placeholder="Enter your nickname or email"
+                placeholder="Enter your email"
                 className="w-full p-3 rounded-lg bg-white/5 text-white border border-white/30 focus:border-white/60 focus:outline-none transition-colors"
                 required
               />
-              {errors.usernameOrEmail && (
-                <p className="mt-1 text-red-400 text-sm">{errors.usernameOrEmail}</p>
+              {errors.email && (
+                <p className="mt-1 text-red-400 text-sm">{errors.email}</p>
               )}
             </div>
 
@@ -100,6 +125,10 @@ const Login = () => {
                 <p className="mt-1 text-red-400 text-sm">{errors.password}</p>
               )}
             </div>
+
+            {errors.general && (
+              <p className="text-center text-red-400 text-sm">{errors.general}</p>
+            )}
 
             <button
               type="submit"
