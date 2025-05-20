@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, Book, Star, Users } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface StatCardProps {
   title: string;
@@ -51,28 +52,37 @@ export default function OverviewPage() {
     },
   ];
 
-  const recentActivities = [
-    {
-      time: "2 hours ago",
-      activity: "Viewed Mars surface details",
-      type: "view",
-    },
-    {
-      time: "5 hours ago",
-      activity: "Bookmarked Andromeda Galaxy",
-      type: "bookmark",
-    },
-    {
-      time: "1 day ago",
-      activity: "Shared Jupiter's Great Red Spot observation",
-      type: "share",
-    },
-    {
-      time: "2 days ago",
-      activity: "Added notes to Orion Nebula",
-      type: "note",
-    },
-  ];
+  const [recentActivities, setRecentActivities] = useState<
+    { time: string; name: string; type: string }[]
+  >([]);
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/api/history", {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("Failed to fetch history");
+        const data = await res.json();
+        setRecentActivities(
+          data
+            .sort(
+              (a: any, b: any) =>
+                new Date(b.viewed_at).getTime() - new Date(a.viewed_at).getTime()
+            )
+            .slice(0, 10)
+            .map((item: any) => ({
+              time: new Date(item.viewed_at).toLocaleString(),
+              name: item.celestial_body?.name || "Unknown object",
+              type: "view",
+            }))
+        );
+      } catch {
+        setRecentActivities([]);
+      }
+    };
+    fetchHistory();
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -96,21 +106,25 @@ export default function OverviewPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-8">
-            {recentActivities.map((activity, index) => (
-              <div key={index} className="flex items-center">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium leading-none">
-                    {activity.activity}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {activity.time}
-                  </p>
+            {recentActivities.length === 0 ? (
+              <p className="text-muted-foreground">No recent activity.</p>
+            ) : (
+              recentActivities.map((activity, index) => (
+                <div key={index} className="flex items-center">
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {activity.name}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {activity.time}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </CardContent>
       </Card>
     </div>
   );
-} 
+}

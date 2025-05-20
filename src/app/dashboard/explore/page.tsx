@@ -10,6 +10,8 @@ export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [objects, setObjects] = useState<{ name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [autocompleteResults, setAutocompleteResults] = useState<{ name: string }[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     const fetchObjects = async () => {
@@ -27,6 +29,43 @@ export default function ExplorePage() {
     };
     fetchObjects();
   }, []);
+
+  const fetchAutocomplete = async (query: string) => {
+    if (!query) {
+      setAutocompleteResults([]);
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:8000/api/search?name=${encodeURIComponent(query)}`);
+      if (!response.ok) throw new Error("Failed to fetch suggestions");
+      const data = await response.json();
+      setAutocompleteResults(data.map((item: any) => ({ name: item.name })));
+    } catch {
+      setAutocompleteResults([]);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setShowSuggestions(true);
+    fetchAutocomplete(e.target.value);
+  };
+  
+  const handleSuggestionClick = async (name: string) => {
+    setSearchQuery(name);
+    setShowSuggestions(false);
+    // Lọc lại chỉ còn object được chọn
+    setObjects([{ name }]);
+    // Gọi API lưu vào history
+    try {
+      await fetch("http://localhost:8000/api/history/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ name }),
+      });
+    } catch {}
+  };
 
   const filteredObjects = searchQuery
     ? objects.filter(object =>
@@ -52,9 +91,24 @@ export default function ExplorePage() {
             placeholder="Search celestial objects..."
             className="flex-1 bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-white placeholder:text-white/50 h-12"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleInputChange}
+            onFocus={() => setShowSuggestions(true)}
+            autoComplete="off"
           />
         </div>
+        {showSuggestions && autocompleteResults.length > 0 && (
+          <ul className="absolute z-10 left-0 right-0 bg-zinc-900 border border-white/20 rounded-b-xl max-h-60 overflow-y-auto">
+            {autocompleteResults.map((item) => (
+              <li
+                key={item.name}
+                className="px-4 py-2 cursor-pointer hover:bg-white/10 text-white"
+                onClick={() => handleSuggestionClick(item.name)}
+              >
+                {item.name}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {/* Results */}

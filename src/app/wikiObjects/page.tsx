@@ -97,24 +97,9 @@ export default function WikiProject() {
         setSelectedItem(null);
     };
 
-    const fetchNASAAPOD = async () => {
-        try {
-            const res = await fetch("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY");
-            const data = await res.json();
-            return data;
-        } catch (error) {
-            console.error('Error fetching NASA APOD:', error);
-            return null;
-        }
-    };
+  
 
-    const handleLoadAPOD = async () => {
-        const apodData = await fetchNASAAPOD();
-        if (apodData) {
-            // Update the selected item with APOD data
-            setSelectedItem(prev => prev ? { ...prev, apodData: apodData } : null);
-        }
-    };
+
 
     return (
         <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-sans">
@@ -122,39 +107,10 @@ export default function WikiProject() {
             <StarsBg />
 
             <main className="flex flex-col gap-10 row-start-2 items-center w-full max-w-6xl">
-                {/* NASA APOD Section */}
-                <section className="w-full bg-white/10 rounded-xl p-6 text-white backdrop-blur-md flex flex-col md:flex-row items-center gap-6 shadow-lg">
-                    <div className="flex-1">
-                        <h2 className="text-2xl font-bold mb-2">NASA Astronomy Picture of the Day</h2>
-                        <p className="mb-4">Each day, NASA shares a breathtaking image or video of our cosmos. Discover the wonders of space, stars, and galaxies beyond.</p>
-                        <button
-                            onClick={async () => {
-                                const res = await fetch("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY");
-                                const data = await res.json();
-                                const image = document.getElementById("apod-image") as HTMLImageElement;
-                                const title = document.getElementById("apod-title");
-                                const desc = document.getElementById("apod-desc");
-                                const date = document.getElementById("apod-date");
-                                if (image && title && desc && date) {
-                                    image.src = data.url;
-                                    title.textContent = data.title;
-                                    desc.textContent = data.explanation;
-                                    date.textContent = data.date;
-                                }
-                            }}
-                            className="px-5 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                            Load Today's APOD
-                        </button>
-                    </div>
-                    <div className="flex-1 flex flex-col items-center">
-                        <img id="apod-image" src="https://www.atscope.com.au/BRO/APOD_Logo.jpg" alt="NASA APOD" className="rounded-xl shadow-md max-h-64 object-cover" />
-                        <h3 id="apod-title" className="mt-4 text-lg font-semibold"></h3>
-                        <p id="apod-desc" className="text-sm text-white/80 mt-2 max-h-32 overflow-auto"></p>
-                        <p id="apod-date" className="text-xs mt-1 text-white/50"></p>
-                    </div>
-                </section>
 
+                         <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                    Wiki
+                </h1>
                 {/* Search */}
                 <input
                     type="text"
