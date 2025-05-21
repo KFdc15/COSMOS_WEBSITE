@@ -62,14 +62,6 @@ export default function ProfilePage() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
   if (loading) {
     return <div className="text-center py-10">Đang tải thông tin...</div>;
   }
@@ -85,34 +77,30 @@ export default function ProfilePage() {
         </CardHeader>
         <CardContent>
           {user ? (
-            <form onSubmit={handleUpdateProfile}>
-              <div className="grid gap-6">
-                <div className="grid gap-3">
-                  <Label htmlFor="name">Họ và tên</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="grid gap-3">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    disabled
-                  />
-                  <p className="text-sm text-gray-500">
-                    Email không thể thay đổi
-                  </p>
-                </div>
-                <Button type="submit">Cập nhật thông tin</Button>
+            <div className="grid gap-6">
+              <div className="grid gap-3">
+                <Label htmlFor="name">Họ và tên</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  disabled
+                />
               </div>
-            </form>
+              <div className="grid gap-3">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  disabled
+                />
+                <p className="text-sm text-gray-500">
+                  Email không thể thay đổi
+                </p>
+              </div>
+            </div>
           ) : (
             <div className="text-center py-4">
               <p>Không tìm thấy thông tin người dùng</p>
